@@ -56,9 +56,7 @@
             <div class="upload-img">
                 <div class="show-img" id="image"></div>
                 <div id="yourBtn" onclick="getFile()"><img src="upload-pic.png" width="40px" height="46.8px" alt=""></div>
-                <div style='height: 0px;width: 0px; overflow:hidden;'>
-                    <input type="file" name="" id="photo" onchange="previewFiles()" multiple/>
-                </div>
+                <input type="file" name="" id="photo" style="display:none" onchange="previewFiles()" multiple/>
                 <button onclick="uploadImage()" id="button-img">Upload Image!</button>
             </div>
         </div>
