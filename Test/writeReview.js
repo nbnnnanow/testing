@@ -72,6 +72,8 @@ function uploadImage() {
     var task = ref.child(name).put(file, metadata);
     handleUploadingTask(task,name);
   }
+  
+  //Check every 100ms if all files are uploaded and set them to images_arr
   validate_pending_upload_task = setInterval(function(){ 
     var all_task_finished = true;
     for(var key in finished_upload_result){
