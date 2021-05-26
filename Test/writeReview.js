@@ -1,5 +1,7 @@
 const db = firebase.firestore().collection("review");
 var images_arr = new Array();
+var finished_upload_result = [];
+var validate_pending_upload_task = null;
 let mainNav = document.getElementById("js-menu");
 let navBarToggle = document.getElementById("js-nav-toggle");
 // navBarToggle.addEventListener("click", function() {
@@ -17,23 +19,7 @@ function getFile() {
   document.getElementById("photo").click();
 }
 
-// function previewFile() {
-//   const preview = document.querySelector('#image');
-//   const file = document.querySelector('input[type=file]').files[0];
-//   const reader = new FileReader();
-
-//   reader.addEventListener("load", function () {
-//     // convert image file to base64 string
-//     preview.src = reader.result;
-//   }, false);
-
-//   if (file) {
-//     reader.readAsDataURL(file);
-//   }
-// }
-
 function previewFiles() {
-
   var preview = document.querySelector('#image');
   var files   = document.querySelector('input[type=file]').files;
 
@@ -56,55 +42,71 @@ function previewFiles() {
 
   }
 
-  if (files) {
+  if (files.length > 0) {
     [].forEach.call(files, readAndPreview);
   }
-
-  console.log(files);
-
 }
 
 function uploadImage() {
-  const ref = firebase.storage().ref();
   const file_arr = document.querySelector("#photo").files;
+  if(file_arr.length == 0){
+    alert("กรุณาเลือกไฟล์ที่ต้องการอัพโหลด");
+    return;
+  }
+  var upload_btn = document.getElementById("button-img");
+  upload_btn.setAttribute("disabled" ,true);
+  upload_btn.innerHTML = "<span>Uploading...<i class=\"fas fa-spinner fa-spin\"></i></span>";
+  finished_upload_result = [];
+  const ref = firebase.storage().ref();
+  
   for (var i = 0; i < file_arr.length; i++) {
+    var unfinished_result = [];
+    unfinished_result.status = "U";
+    unfinished_result.data = "";
     var file = file_arr[i];
-    const name = new Date() + "-" + file.name;
-    const metadata = {
+    var name = new Date() + "-" + file.name;
+    finished_upload_result[name] = unfinished_result;
+    var metadata = {
       contentType: file.type
     };
-    const task = ref.child(name).put(file, metadata);
-    task
-      .then(snapshot => snapshot.ref.getDownloadURL())
-      .then(url => {
-        console.log(url);
-        document.querySelector("#image").src = url;
-      })
-      .catch(console.error);
+    var task = ref.child(name).put(file, metadata);
+    handleUploadingTask(task,name);
   }
+  validate_pending_upload_task = setInterval(function(){ 
+    var all_task_finished = true;
+    for(var key in finished_upload_result){
+      var value = finished_upload_result[key];
+      if(value.status == "U"){
+        all_task_finished = false;
+        break;
+      }
+    }
+    if(all_task_finished){
+      for(var key in finished_upload_result){
+        //Push only success upload into image_arr
+        var value = finished_upload_result[key];
+        if(value.status == "S"){
+          images_arr.push(key);
+        }
+      }
+      var upload_btn = document.getElementById("button-img");
+      upload_btn.removeAttribute("disabled");
+      upload_btn.innerHTML = "<span>Upload Image!</span>";
+      //clear file input
+      document.querySelector("#photo").value = "";
+      clearInterval(validate_pending_upload_task);
+    }
+  }, 100);
 }
 
-// var image_ref_arr = new Array();
-// function uploadImage() {
-//     const ref = firebase.storage().ref();
-//     const file_arr = document.querySelector("#photo").files;
-//     for (var i=0; i < file_arr.length; i++){
-//         var file = file_arr[i];
-//         const name = new Date() + "-" + file.name;
-//         const metadata = {
-//             contentType: file.type
-//         };
-//         var task = ref.child(name).put(file, metadata);
-//         task.then(snapshot => snapshot.ref.getDownloadURL())
-//         .then(url => {
-//             //TODO later ตอนนี้มันจะเอาแค่รูปสุดท้ายที่อัพเสร็จมาแสดง
-//             document.querySelector("#image").src = url;
-//             //OK
-//             image_ref_arr.push(name);
-//         }).
-//         catch(console.error);
-//     }
-// }
+function handleUploadingTask(task,image_ref){
+  task
+    .then(snapshot => {finished_upload_result[snapshot.ref.fullPath].status = "S";},
+    error => {
+      // console.log(error); 
+      finished_upload_result[image_ref].status = "F";
+      finished_upload_result[image_ref].data = error });
+}
 
 
 function addData(actName, attrName, textReview) {
