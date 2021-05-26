@@ -3,10 +3,10 @@ var images_arr = new Array();
 var finished_upload_result = [];
 var validate_pending_upload_task = null;
 let mainNav = document.getElementById("js-menu");
-let navBarToggle = document.getElementById("js-nav-toggle");
-// navBarToggle.addEventListener("click", function() {
-//   mainNav.classList.toggle("active");
-// });
+var navBarToggle = document.getElementById("js-nav-toggle");
+navBarToggle.addEventListener("click", function() {
+  mainNav.classList.toggle("active");
+});
 
 db.get().then((querySnapshot) => {
   querySnapshot.forEach((doc) => {
