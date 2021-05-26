@@ -1,9 +1,16 @@
 const db = firebase.firestore().collection("review");
 let mainNav = document.getElementById("js-menu");
 let navBarToggle = document.getElementById("js-nav-toggle");
-navBarToggle.addEventListener("click", function() {
-  mainNav.classList.toggle("active");
+// navBarToggle.addEventListener("click", function() {
+//   mainNav.classList.toggle("active");
+// });
+
+db.get().then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+  });
 });
+
 
 function getFile() {
   document.getElementById("photo").click();
@@ -98,25 +105,6 @@ function uploadImage() {
 //     }
 // }
 
-// function addData(actName, attrName, textReview){
-//     var actName = document.getElementById('actname').value;
-//     var attrName = document.getElementById('attrname').value;
-//     var textReview = document.getElementById('textreview').value;
-
-//     if(actName != "" && attrName != "" && textReview != ""){
-//         db.add({
-//             activityName : actName,
-//             touristattraction: attrName,
-//             descriptionReview: textReview,
-//             images : image_ref_arr
-//         });
-
-//         alert("กรอกข้อมูลสำเร็จ");
-//     }else{
-//         alert("กรุณากรอกให้ครบ");
-//     }
-// }
-
 
 function addData(actName, attrName, textReview) {
   var actName = document.getElementById('actname').value;
@@ -128,11 +116,16 @@ function addData(actName, attrName, textReview) {
        activityName: actName,
        touristAttraction: attrName,
        descriptionReview: textReview
-   });
-
-   alert("กรอกข้อมูลเสร็จเรียบร้อย!")
+       }).then((newdataref) => {
+          // console.log("Review written with ID: ", newdataref.id);
+          alert("กรอกข้อมูลเสร็จเรียบร้อย!");
+          window.location.reload(false);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+        alert("เพิ่มข้อมูลล้มเหลว กรุณาลองใหม่อีกครั้ง");
+    });
   }else{
       alert("กรุณากรอกข้อมูลให้ครบถ้วน")
   }
-
 }
