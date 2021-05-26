@@ -7,15 +7,36 @@ navBarToggle.addEventListener("click", function() {
 var slideIndexArr = [];
 var master_container = document.querySelector(".main_container");
 db.get().then((querySnapshot) => {
+  //Generate review list
   querySnapshot.forEach((doc) => {
     var data = doc.data();
     data.id = doc.id;
     master_container.innerHTML += generateBoxReview(data);
+  });
+  
+  //Download image and display at correct element
+  querySnapshot.forEach((doc) => {
+    var data = doc.data();
+    data.id = doc.id;
     if(data.images !== undefined && data.images.length > 0){
+      for(var ind = 0;ind < data.images.length;ind++){
+        downloadAndSetImage(data.id,ind,data.images[ind]);
+      }
       setInterval(() => {showSlides(data.id)}, 2000);
     }
   });
 });
+
+function downloadAndSetImage(classid,img_index,img_ref){
+  var storageRef = firebase.storage().ref();
+  var slideparent = document.getElementsByClassName("mySlides" + classid)[img_index];
+  storageRef.child(img_ref).getDownloadURL().then(function(url) {
+    slideparent.querySelector("img").src = url;
+  }).catch(function(error) {
+    // console.log(error);
+    slideparent.querySelector("img").alt = img_ref;
+  });
+}
 
 function generateBoxReview(data){
   var htmlBoxReview = "";
@@ -28,7 +49,7 @@ function generateBoxReview(data){
       for(var ind = 0;ind < data.images.length;ind ++){
         htmlBoxReview += '<div class="mySlides'+ data.id +' fade">';
           htmlBoxReview +=  '<div class="numbertext">' + ind +' / ' + data.images.length + '</div>';
-          htmlBoxReview +=  '<img src="img_review1.jpg" style="width:100%" height="500px"/>';
+          htmlBoxReview +=  '<img src="" style="width:100%" height="500px"/>';
         htmlBoxReview +=  '</div>';
       }
       htmlBoxReview += '</div>';
