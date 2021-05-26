@@ -125,7 +125,7 @@ function addData(actName, attrName, textReview) {
        }).then((newdataref) => {
           // console.log("Review written with ID: ", newdataref.id);
           alert("กรอกข้อมูลเสร็จเรียบร้อย!");
-          window.location.reload(false);
+          window.location = "reviewPage.html";
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
