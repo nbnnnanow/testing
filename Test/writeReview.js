@@ -1,4 +1,5 @@
 const db = firebase.firestore().collection("review");
+var images_arr = new Array();
 let mainNav = document.getElementById("js-menu");
 let navBarToggle = document.getElementById("js-nav-toggle");
 // navBarToggle.addEventListener("click", function() {
@@ -115,7 +116,8 @@ function addData(actName, attrName, textReview) {
       db.add({
        activityName: actName,
        touristAttraction: attrName,
-       descriptionReview: textReview
+       descriptionReview: textReview,
+       images : images_arr
        }).then((newdataref) => {
           // console.log("Review written with ID: ", newdataref.id);
           alert("กรอกข้อมูลเสร็จเรียบร้อย!");
