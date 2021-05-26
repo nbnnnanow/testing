@@ -45,16 +45,12 @@
             <div class="activity-touristAttraction">
                 <div class="activity">
                     <h2 class="activity-topic">กิจกรรม</h2>
-                    <form id="addNew" action="">
-                        <input type="text" name="actName" id="actname" placeholder="ex. ปลูกป่า">
-                    </form>
+                        <input type="text" name="actName" id="actname" placeholder="ex. ปลูกป่า"/>
                 </div>
 
                 <div class="touristAttraction">
                     <h2 class="touristAttr-topic">สถานที่</h2>
-                    <form id="addNew" action="">
-                        <input type="text" name="tourAttr" id="attrname" placeholder="ex. ผาเก็บตะวัน">
-                    </form>
+                        <input type="text" name="tourAttr" id="attrname" placeholder="ex. ผาเก็บตะวัน"/>
                 </div>
             </div>
 
@@ -63,7 +59,7 @@
                 <div class="show-img" id="image"></div>
                 <div id="yourBtn" onclick="getFile()"><img src="upload-pic.png" width="40px" height="46.8px" alt=""></div>
                 <div style='height: 0px;width: 0px; overflow:hidden;'>
-                    <input type="file" name="" id="photo" onchange="previewFiles()" multiple>
+                    <input type="file" name="" id="photo" onchange="previewFiles()" multiple/>
                 </div>
                 <button onclick="uploadImage()" id="button-img">Upload Image!</button>
             </div>
@@ -72,16 +68,14 @@
         <!-- descriptionReview Part -->
         <div class="descript">
             <div class="des-top"><h2 class="descript-topic">รายละเอียด</h2></div>
-            <div class="box-des"><form id="addNew" action="">
+            <div class="box-des">
                 <textarea name="descriptReview" id="textreview" placeholder="เล่าให้เราฟังเกี่ยวกับประสบการณ์ท่องเที่ยวของคุณ..."></textarea>
-            </form></div>
+            </div>
         </div>
 
         <!-- Submit button Part -->
         <div class="submit-button">
-            <form id="addNew" action="">
-                <button id="myButton" class="submit-b" onclick="addData()">Submit</button>
-            </form>
+            <button id="myButton" class="submit-b" onclick="addData()">Submit</button>
         </div>
     </div>
 </body>
